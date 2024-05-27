@@ -1,0 +1,12 @@
+@import url('https://fonts.cdnfonts.com/css/gilroy-bold');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+  font-family: gilroy;
+}
+
+::selection{
+  color: rgba(232, 146, 47);
+}

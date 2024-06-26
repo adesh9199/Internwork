@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    .glow {
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    textarea.typing,
+    input.typing {
+      color: rgb(8, 77, 166);
+    }
+
+    textarea.not-typing,
+    input.not-typing {
+      color: #1fce4e;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-800 text-white min-h-screen flex flex-col items-center py-8 text-white">
+  <button onclick="toggleForm()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
+    Create Task
+  </button>
+
+  <form id="taskForm" action="/create" method="post" class="form bg-slate-700 p-4 rounded hidden text-white">
+    <input type="text" placeholder="Title..." name="title" class="w-full p-2 mb-2 rounded not-typing" required oninput="handleInput(this)" onblur="handleBlur(this)">
+    <textarea name="details" placeholder="Write Details of Tasks..." class="w-full p-2 mb-2 rounded not-typing" style="resize: none;" required oninput="handleInput(this)" onblur="handleBlur(this)"></textarea>
+    <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" type="submit">Create Task</button>
+  </form>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full max-w-5xl mt-4">
+    <% if (files.length != 0) { %>
+    <% files.forEach(function(val) { %>
+    <div class="bg-slate-600 p-4 rounded glow">
+
+      <h1 class="text-xl font-bold"><%= val.title %> <span>
+        <form method="post" action="/delete" class="float-right">
+            <input type="hidden" name="title" value="<%= val.title %>">
+            <button><i class="fa-regular fa-trash-can cursor-pointer text-white hover:text-red-500 hover:shadow-2xl"></i></button>
+        </form>
+        
+        </span></h1>
+      <p class="mt-2"><%= val.details %></p>
+    </div>
+    <% }); %>
+    <% } else { %>
+    <h3 class="col-span-full text-center">No more tasks</h3>
+    <% } %>
+  </div>
+
+  <script>
+    function toggleForm() {
+      const form = document.getElementById('taskForm');
+      form.classList.toggle('hidden');
+    }
+
+    function handleInput(element) {
+      element.classList.add('typing');
+      element.classList.remove('not-typing');
+    }
+
+    function handleBlur(element) {
+      element.classList.remove('typing');
+      element.classList.add('not-typing');
+    }
+  </script>
+</body>
+
+</html>

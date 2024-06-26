@@ -1,0 +1,32 @@
+*{
+    background-color: #00203FFF;
+}
+.form{
+    
+    width: 400px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    /* outline: none; */
+    caret-color: red;
+    border: 1px;
+   padding: 5px;
+   align-items: center;
+   margin: 40%;
+    background-color: #ADEFD1FF;
+}
+::placeholder {
+    color: rgb(185, 206, 208);
+  }
+  textarea:focus, input:focus {
+    color: #41b0bf;
+}
+
+input, select, textarea{
+    color: #1fce4e;
+}
+.btn{
+    padding: 10px 15px;
+    width: 50%;
+background-color: rgb(62, 62, 141);
+}

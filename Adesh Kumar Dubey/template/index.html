@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .card-content {
+            display: none;
+        }
+    </style>
+</head>
+<body class="h-screen flex bg-gray-800">
+
+    <!-- Left Input Area -->
+    <div class="w-2/3 m-4 p-4 bg-gray-700 bg-opacity-50 rounded-lg shadow-lg flex flex-col justify-between">
+        <textarea id="codeInput" class="w-full h-3/4 p-4 border border-gray-600 rounded-md bg-gray-600 text-white placeholder-gray-400 shadow-inner" placeholder="Write your code here..."></textarea>
+        <div class="flex justify-end mt-4">
+            <button id="analyzeBtn" class="px-6 py-2 mx-2 bg-green-500 text-white font-bold rounded-md shadow-lg hover:bg-green-600 transition duration-300 flex items-center"><i class="fas fa-play mr-2"></i>Analyze</button>
+            <button id="resetBtn" class="px-6 py-2 mx-2 bg-red-500 text-white font-bold rounded-md shadow-lg hover:bg-red-600 transition duration-300 flex items-center"><i class="fas fa-redo mr-2"></i>Reset</button>
+        </div>
+    </div>
+
+    <!-- Right Card Container -->
+    <div class="w-1/3 h-4/5 border-dotted border-4 border-gray-500 m-4 p-4 bg-gray-700 bg-opacity-50 rounded-lg shadow-lg flex flex-col">
+        <h2 class="text-xl font-bold text-white mb-4 text-center">Result</h2>
+        <div id="resultContainer" class="h-full overflow-y-scroll">
+            <!-- Cards will be dynamically generated here -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('analyzeBtn').addEventListener('click', function() {
+            const code = document.getElementById('codeInput').value.trim();
+            const resultContainer = document.getElementById('resultContainer');
+            resultContainer.innerHTML = ''; // Clear previous results
+
+            if (code) {
+                // Mock data for demonstration purposes
+                const functions = [
+                    { type: 'Function', name: '__init__', content: 'Constructor function' },
+                    { type: 'Function', name: '__len__', content: 'Length function' },
+                    { type: 'Function', name: '__getitem__', content: 'Get item function' },
+                    { type: 'Class', name: 'CustomDataset', content: 'Custom dataset class' }
+                ];
+
+                functions.forEach(func => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-gray-600 p-4 m-2 rounded-md shadow-md text-center';
+
+                    const typeElem = document.createElement('p');
+                    typeElem.className = 'font-bold text-white';
+                    typeElem.innerText = `Type: ${func.type}`;
+
+                    const nameElem = document.createElement('p');
+                    nameElem.className = 'text-gray-300';
+                    nameElem.innerText = `Name: ${func.name}`;
+
+                    const contentBtn = document.createElement('button');
+                    contentBtn.className = 'mt-2 px-4 py-2 bg-blue-500 text-white rounded-md shadow';
+                    contentBtn.innerText = 'Content';
+                    contentBtn.addEventListener('click', function() {
+                        contentElem.style.display = contentElem.style.display === 'none' ? 'block' : 'none';
+                    });
+
+                    const contentElem = document.createElement('div');
+                    contentElem.className = 'card-content mt-2 text-white';
+                    contentElem.innerText = func.content;
+
+                    card.appendChild(typeElem);
+                    card.appendChild(nameElem);
+                    card.appendChild(contentBtn);
+                    card.appendChild(contentElem);
+
+                    resultContainer.appendChild(card);
+                });
+            } else {
+                const message = document.createElement('p');
+                message.className = 'text-white text-center';
+                message.innerText = 'Please enter some code to analyze.';
+                resultContainer.appendChild(message);
+            }
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            document.getElementById('codeInput').value = '';
+            document.getElementById('resultContainer').innerHTML = '';
+        });
+    </script>
+</body>
+</html>

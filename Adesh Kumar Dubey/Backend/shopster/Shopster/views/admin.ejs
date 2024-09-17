@@ -1,0 +1,111 @@
+<%- include('./partials/header') %>
+    <style>
+        .dark-mode {
+            background-color: #1e293b;
+            color: white;
+        }
+
+        .light-mode {
+            background-color: #fff;
+            color: black;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .relative:hover .hidden {
+            display: block;
+        }
+
+        /* Ensure flex container has the right properties */
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.25rem; /* Tailwind gap-5 equivalent */
+        }
+
+        /* Ensure flex items take up 1/4th of the container width */
+        .flex-item {
+            width: calc(25% - 1.25rem); /* 25% width minus gap */
+            flex-shrink: 0;
+            height: 19rem;
+            display: flex;
+            flex-direction: column;
+            background-color: #f9f9f9; /* Default background color */
+            border: 1px solid #ddd; /* Border for visual separation */
+            border-radius: 0.5rem; /* Rounded corners */
+            overflow: hidden; /* Hide overflow for rounded corners */
+        }
+
+        .product-image {
+            height: 14rem; /* Reduced height */
+            background-color: #e0e0e0; /* Default background color for image area */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Ensure image doesn't overflow */
+        }
+
+        .product-image img {
+            max-height: 100%;
+            width: auto;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 0.75rem; /* Reduced padding */
+            background-color: #fff; /* Background color for info section */
+        }
+
+        .product-info h3 {
+            margin: 0;
+            font-size: 1rem; /* Reduced font size */
+        }
+
+        .product-info h4 {
+            margin: 0.25rem 0 0;
+            font-size: 0.875rem; /* Reduced font size */
+        }
+        .discount{
+          color: rgb(13, 177, 13);
+          border: 2px solid black;
+          background: #fff;
+          float: right;
+        }
+    </style>
+
+
+<div class="w-full h-screen flex px-20 py-20">
+    <div class="w-[25%] flex flex-col justify-between h-full border-r border-gray-200 pr-5">
+        <div class="flex flex-col mt-10">
+            <a class="block mb-4 text-lg font-medium text-gray-700 hover:text-gray-900" href="">All Products</a>
+            <a class="block mb-4 text-lg font-medium text-gray-700 hover:text-gray-900" href="/owners/createProducts">Create New Product</a>
+            
+    <a class="text-red-500 text-lg font-medium mb-4 hover:underline" href="/delete">Delete All</a>
+            <a class="block text-lg font-medium text-gray-700 hover:text-red-500" href="/owners/logout">
+                <i class="ri-logout-circle-r-line"></i> Logout
+            </a>
+        </div>
+    </div>
+ 
+    <div class="w-[75%] h-screen flex-container">
+        
+        <% products.forEach(product => { %>
+            <div class="flex-item">
+                <div class="product-image" style="background-color: <%= product.bgcolor %>;">
+                    <img src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="">
+                </div>
+                <div class="product-info" style="background-color: <%= product.panelcolor %>; color: <%= product.textcolor %>;">
+                    <div>
+                        <h3 class="text-lg font-semibold"><%= product.name %></h3>
+                        <h4 class="text-md font-semibold">₹ <%= product.price %> <span class=" discount inline-block ml-2 px-2 py-1 text-xs rounded-full"><%= product.discount %>% off</span></h4>
+                    </div>
+                   
+                </div>
+            </div>
+        <% }); %>
+    </div>
+     </div>
+</div>
+<%- include('./partials/footer') %>

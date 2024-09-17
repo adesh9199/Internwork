@@ -1,0 +1,87 @@
+<%- include('./partials/header') %>
+<div class="w-full h-screen flex items-start px-10 py-10 gap-10">
+    <!-- Products Container -->
+    <div class="w-[60%] flex flex-col gap-6 overflow-y-auto"> <!-- Adjusted to allow scrolling -->
+        <% let totalMRP = 0; let totalDiscount = 0; %>
+        <% user.cart.forEach(item => { %>
+            <div class="w-full max-w-sm mx-auto relative rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-800"> <!-- Dark mode -->
+                <button 
+                    class="absolute top-2 right-2 w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-700" 
+                    onclick="removeItem('<%= item.id %>')">
+                    <i class="ri-delete-bin-line text-xl"></i>
+                </button>
+                <div class="w-full h-48 flex justify-center bg-gray-200 dark:bg-gray-600">
+                    <img class="h-full object-cover" src="data:image/jpeg;base64,<%= item.image.toString('base64') %>" alt="">
+                </div>
+                <div class="w-full flex flex-col items-center px-4 py-3">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white"><%= item.name %></h3>
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="w-6 h-6 bg-white dark:bg-gray-700 flex rounded-full items-center justify-center ri-add-line"></i>
+                        <div class="px-2 py-1 rounded-md bg-white dark:bg-gray-700 text-black dark:text-white">01</div>
+                        <i class="w-6 h-6 bg-white dark:bg-gray-700 flex rounded-full items-center justify-center ri-subtract-line"></i>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-700">
+                    <h4 class="text-lg font-medium text-gray-900 dark:text-white">Net Total</h4>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">₹ <%= item.price %></h2>
+                </div>
+            </div>
+            <% totalMRP += item.price; %>
+            <% totalDiscount += Math.floor(item.discount * item.price / 100); %>
+        <% }); %>
+    </div>
+    
+    <!-- Price Breakdown Container -->
+    <div class=" right-6  w-[35%] bg-white shadow-lg rounded-lg px-6 py-6 dark:bg-gray-800"> <!-- Adjusted width and fixed position -->
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Price Breakdown</h3>
+        <div class="mt-5">
+            <div class="flex justify-between mt-2 text-gray-900 dark:text-white">
+                <h4 class="font-medium">Total MRP</h4>
+                <h4 class="font-semibold">₹ <%= totalMRP %></h4>
+            </div>
+            <div class="flex justify-between mt-2 text-gray-900 dark:text-white">
+                <h4 class="font-medium">Discount on MRP</h4>
+                <h4 class="font-semibold">₹ <%= totalDiscount %></h4>
+            </div>
+            <div class="flex justify-between mt-2 text-gray-900 dark:text-white">
+                <h4 class="font-medium">Platform Fee</h4>
+                <h4 class="font-semibold">₹ 20</h4>
+            </div>
+            <div class="flex justify-between mt-2 text-gray-900 dark:text-white">
+                <h4 class="font-medium">Shipping Fee</h4>
+                <h4 class="font-semibold">FREE</h4>
+            </div>
+        </div>
+        <div class="w-full h-[1px] bg-black my-5 dark:bg-white"></div>
+        <div class="flex justify-between mt-5 text-gray-900 dark:text-white">
+            <h3 class="text-xl font-bold">Total Amount</h3>
+            <h3 class="text-xl font-semibold text-green-600">₹ <%= totalMRP - totalDiscount + 20 %></h3>
+        </div>
+        <div class="mt-5">
+            <button class="proceed-btn flex items-center mb-3 justify-center px-4 py-2 bg-green-500 text-white font-bold rounded hover:bg-green-600 active:bg-green-700 transition duration-300 transform hover:scale-105 active:scale-95">
+                Proceed <i class="ri-arrow-right-line ml-2"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<%- include('./partials/footer') %>
+
+<script>
+    function removeItem(itemId) {
+        fetch(`/cart/remove/${itemId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload(); // Reload the page to reflect changes
+            } else {
+                alert('Failed to remove item');
+            }
+        });
+    }
+</script>

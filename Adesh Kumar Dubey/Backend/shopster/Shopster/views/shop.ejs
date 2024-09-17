@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopster</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="/css/tailwind.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <style>
+        .dark-mode {
+            background-color: #1e293b;
+            color: white;
+        }
+
+        .light-mode {
+            background-color: #fff;
+            color: black;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .relative:hover .hidden {
+            display: block;
+        }
+
+        /* Ensure flex container has the right properties */
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.25rem; /* Tailwind gap-5 equivalent */
+        }
+
+        /* Ensure flex items take up 1/4th of the container width */
+        .flex-item {
+            width: calc(25% - 1.25rem); /* 25% width minus gap */
+            flex-shrink: 0;
+            display: flex;
+            height: 19rem;
+            flex-direction: column;
+            background-color: #f9f9f9; /* Default background color */
+            border: 1px solid #ddd; /* Border for visual separation */
+            border-radius: 0.5rem; /* Rounded corners */
+            overflow: hidden; /* Hide overflow for rounded corners */
+        }
+
+        .product-image {
+            height: 14rem; /* Reduced height */
+            background-color: #e0e0e0; /* Default background color for image area */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Ensure image doesn't overflow */
+        }
+
+        .product-image img {
+            max-height: 100%;
+            width: auto;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 0.75rem; /* Reduced padding */
+            background-color: #fff; /* Background color for info section */
+        }
+
+        .product-info h3 {
+            margin: 0;
+            font-size: 1rem; /* Reduced font size */
+        }
+
+        .product-info h4 {
+            margin: 0.25rem 0 0;
+            font-size: 0.875rem; /* Reduced font size */
+        }
+        .discount{
+          color: rgb(13, 177, 13);
+          border: 2px solid black;
+          background: #fff;
+          float: right;
+        }
+    </style>
+</head>
+
+<body class="font-['helvetica_now_display'] light-mode">
+    <nav class="w-full px-5 py-3 flex justify-between items-center mb-4">
+        <a href="/" class="text-2xl">Shopster</a>
+        <div class="flex gap-10 items-center">
+          <a href="/shop" class="hover:bg-gray-200 hover:rounded-lg hover:scale-105 transition duration-200">Shop</a>
+          <a href="" class="hover:bg-gray-200 hover:rounded-lg hover:scale-105 transition duration-200">My Account</a>
+          <a class="text-red-500 hover:bg-gray-200 hover:rounded-lg hover:scale-105 transition duration-200" href="/users/logout">
+            <i class="ri-logout-circle-r-line"></i> Logout
+          </a>
+          <div class="relative hover:bg-gray-200 hover:rounded-lg hover:scale-105 transition duration-200 p-2">
+            <a href="/cart" class="relative flex items-center">
+              <i class="ri-shopping-cart-2-line text-xl"></i>
+              <span class=" top-0  transform translate-x-1/2 -translate-y-1/2 text-green-600  text-xs font-bold  flex items-center justify-center">
+                <%= users.cart.length %>
+              </span>
+              <span class=" ml-1">Cart</span>
+            </a>
+          </div>
+          
+          <button id="theme-toggle" class="hover:bg-gray-200 hover:rounded-lg hover:scale-105 transition duration-200 text-2xl p-2">
+            <i id="theme-icon" class="ri-moon-line"></i>
+          </button>
+        </div>
+      </nav>
+      
+      
+      
+      <% if(success.length > 0){ %>
+        <div id="successMessage" class="absolute top-8 left-1/2 transform -translate-x-1/2 p-3 flex items-center space-x-2">
+          <div class="bg-green-500 rounded-full p-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <span class="inline-block text-black">
+            <%= success %>
+          </span>
+        </div>
+      <% } %>
+      
+    <div class="w-full h-screen flex px-20 py-20">
+        <div class="w-[25%] flex flex-col justify-between h-full group hover:w-[30%] transition-all duration-300 ease-in-out">
+            <div class="overflow-hidden group-hover:overflow-visible transition-all duration-300 ease-in-out">
+                <div class="flex items-center gap-2 mb-10">
+                    <h3 class="text-lg font-semibold">Sort by</h3>
+                    <form action="/shop">
+                        <select class="border-[1px] px-2 py-1" name="sortby" id="">
+                            <option value="popular" class="text-black">Popular</option>
+                            <option value="newest" class="text-red-700">Newest</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="flex flex-col mt-10">
+                    <a class="block w-fit mb-2 text-lg font-medium hover:text-gray-700" href="">New Collection</a>
+                    <a class="block w-fit mb-2 text-lg font-medium hover:text-gray-700" href="">All Products</a>
+                    <a class="block w-fit mb-2 text-lg font-medium hover:text-gray-700" href="">Discounted Products</a>
+                </div>
+                <div class="mt-10">
+                    <a class="block w-fit mb-2 text-lg font-medium hover:text-gray-700" href="">Filter by :</a>
+                    <a class="block w-fit mb-2 text-lg font-medium hover:text-gray-700" href="">Availability</a>
+                    <a class="block w-fit mb-2 text-lg font-medium hover:text-gray-700" href="">Discount</a>
+                </div>
+            </div>
+            <div>
+               
+            </div>
+        </div>
+        <div class="w-[75%] h-screen flex-container">
+            <% products.forEach(product => { %>
+                <div class="flex-item">
+                    <div class="product-image" style="background-color: <%= product.bgcolor %>;">
+                        <img src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="">
+                    </div>
+                    <div class="product-info" style="background-color: <%= product.panelcolor %>; color: <%= product.textcolor %>;">
+                        <div>
+                            <h3 class="text-lg font-semibold"><%= product.name %></h3>
+                            <h4 class="text-md font-semibold">₹ <%= product.price %> <span class=" discount inline-block ml-2 px-2 py-1 text-xs rounded-full"><%= product.discount %>% off</span></h4>
+                        </div>
+                        <a class="w-7 h-7 mt-2 flex items-center justify-center rounded-full bg-white" href="/addTocart/<%= product._id %>">
+                            <i  class="ri-add-line"></i>
+                        </a>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const body = document.body;
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                themeIcon.classList.remove('ri-moon-line');
+                themeIcon.classList.add('ri-sun-line');
+            } else {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                themeIcon.classList.remove('ri-sun-line');
+                themeIcon.classList.add('ri-moon-line');
+            }
+        });
+ 
+    document.addEventListener('DOMContentLoaded', function() {
+        const successMessage = document.getElementById('successMessage');
+        if (successMessage) {
+            setTimeout(() => {
+                successMessage.style.transition = 'opacity 0.5s';
+                successMessage.style.opacity = '0';
+                setTimeout(() => {
+                    successMessage.remove();
+                }, 500); 
+            }, 1000); 
+        }
+    });
+
+    </script>
+</body>
+
+</html>
